@@ -1,14 +1,19 @@
 #ifndef USAC_HH
 #define USAC_HH
+
+#if defined(_WIN32)
 #define NOMINMAX
+#include <windows.h>
+#endif
 
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <limits>
 #include <vector>
-#include <windows.h>
-#include "config/ConfigParams.h" 
+#include "config/ConfigParams.h"
+#include "utils/Timer.h"
 
 struct UsacResults {
 	void reset() {
@@ -308,8 +313,7 @@ bool USAC<ProblemType>::solve()
 	}
 
 	// timing stuff
-	LARGE_INTEGER tick, tock, freq;
-	QueryPerformanceCounter(&tick);
+	double tick = Timer::getTimestampInSeconds();
 
 	// ------------------------------------------------------------------------
 	// main USAC loop
@@ -502,8 +506,7 @@ bool USAC<ProblemType>::solve()
 
 	// ------------------------------------------------------------------------	
 	// output statistics
-	QueryPerformanceCounter(&tock);
-	QueryPerformanceFrequency(&freq);
+	double tock = Timer::getTimestampInSeconds();
 	std::cout << "Number of hypotheses/models: " << usac_results_.hyp_count_ << "/" << usac_results_.model_count_ << std::endl;
 	std::cout << "Number of samples rejected by pre-validation: " << usac_results_.rejected_sample_count_ << std::endl;
 	std::cout << "Number of models rejected by pre-validation: " << usac_results_.rejected_model_count_ << std::endl;
@@ -513,7 +516,7 @@ bool USAC<ProblemType>::solve()
 
 	// ------------------------------------------------------------------------
 	// timing stuff
-	usac_results_.total_runtime_ = (double)(tock.QuadPart - tick.QuadPart)/(double)freq.QuadPart;
+	usac_results_.total_runtime_ = tock - tick;
 	std::cout << "Time: " << usac_results_.total_runtime_ << std::endl << std::endl;
 
 	// ------------------------------------------------------------------------
@@ -598,7 +601,7 @@ void USAC<ProblemType>::initPROSAC()
 	non_random_inliers_prosac_.clear();
 	non_random_inliers_prosac_.resize(usac_num_data_points_, 0);  
 	double pn_i = 1.0;    // prob(i inliers) with subset size n
-	for (size_t n = usac_min_sample_size_+1; n <= usac_num_data_points_; ++n)
+	for (unsigned int n = usac_min_sample_size_+1; n <= usac_num_data_points_; ++n)
 	{
 		if (n-1 > 1000)
 		{
@@ -610,7 +613,7 @@ void USAC<ProblemType>::initPROSAC()
 		// initial value for i = m+1 inliers
 		pn_i_vec[usac_min_sample_size_] = (prosac_beta_)*std::pow((double)1-prosac_beta_, (double)n-usac_min_sample_size_-1)*(n-usac_min_sample_size_);
 		pn_i = pn_i_vec[usac_min_sample_size_];
-		for (size_t i = usac_min_sample_size_+2; i <= n; ++i)
+		for (unsigned int i = usac_min_sample_size_+2; i <= n; ++i)
 		{
 			// use recurrent relation to fill in remaining values
 			if (i == n)
@@ -624,7 +627,7 @@ void USAC<ProblemType>::initPROSAC()
 		// find minimum number of inliers satisfying the non-randomness constraint
 		double acc = 0.0;
 		unsigned int i_min = 0;
-		for (size_t i = n; i >= usac_min_sample_size_+1; --i)
+		for (unsigned int i = n; i >= usac_min_sample_size_+1; --i)
 		{
 			acc += pn_i_vec[i-1];
 			if (acc < 1-prosac_non_rand_conf_)
