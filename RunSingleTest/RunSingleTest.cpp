@@ -1,12 +1,18 @@
+#if defined(_WIN32)
 #define NOMINMAX
+#include <windows.h>
+#endif
+
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <time.h>
-#include <windows.h>
-#include "config\ConfigParams.h"
-#include "estimators\FundMatrixEstimator.h"
-#include "estimators\HomogEstimator.h"
+#include <vector>
+
+#include "config/ConfigParams.h"
+#include "estimators/FundMatrixEstimator.h"
+#include "estimators/HomogEstimator.h"
+
 
 // helper functions
 bool readCorrsFromFile(std::string& inputFilePath, std::vector<double>& pointData, unsigned int& numPts)
@@ -70,7 +76,7 @@ int main(int argc, char **argv)
 		// ------------------------------------------------------------------------
 		// initialize the fundamental matrix estimation problem
 		ConfigParamsFund cfg;
-		if ( !cfg.initParamsFromConfigFile(std::string(cfg_file_path)) )
+		if ( !cfg.initParamsFromConfigFile(cfg_file_path) )
 		{
 			std::cerr << "Error during initialization" << std::endl;
 			return(EXIT_FAILURE);
@@ -110,8 +116,8 @@ int main(int argc, char **argv)
 
 		// write out results
 		size_t pos = (cfg.fund.inputFilePath).find_last_of("/\\");
-		std::string working_dir = (cfg.fund.inputFilePath).substr(0, pos);
-		std::ofstream outmodel((working_dir + "\\F.txt").c_str());
+		std::string working_dir = (cfg.fund.inputFilePath).substr(0, pos + 1);
+		std::ofstream outmodel((working_dir + "F.txt").c_str());
 		for (unsigned int i = 0; i < 3; ++i)
 		{
 			for (unsigned int j = 0; j < 3; ++j)
@@ -120,7 +126,7 @@ int main(int argc, char **argv)
 			}
 		}
 		outmodel.close();
-		std::ofstream outinliers((working_dir + "\\inliers.txt").c_str());
+		std::ofstream outinliers((working_dir + "inliers.txt").c_str());
 		for (unsigned int i = 0; i < cfg.common.numDataPoints; ++i)
 		{
 			outinliers << fund->usac_results_.inlier_flags_[i] << std::endl;
@@ -137,7 +143,7 @@ int main(int argc, char **argv)
 		// ------------------------------------------------------------------------
 		// initialize the homography estimation problem
 		ConfigParamsHomog cfg;
-		if ( !cfg.initParamsFromConfigFile(std::string(cfg_file_path)) )
+		if ( !cfg.initParamsFromConfigFile(cfg_file_path) )
 		{
 			std::cerr << "Error during initialization" << std::endl;
 			return(EXIT_FAILURE);
@@ -177,8 +183,8 @@ int main(int argc, char **argv)
 
 		// write out results
 		size_t pos = (cfg.homog.inputFilePath).find_last_of("/\\");
-		std::string working_dir = (cfg.homog.inputFilePath).substr(0, pos);
-		std::ofstream outmodel((working_dir + "\\H.txt").c_str());
+		std::string working_dir = (cfg.homog.inputFilePath).substr(0, pos + 1);
+		std::ofstream outmodel((working_dir + "H.txt").c_str());
 		for (unsigned int i = 0; i < 3; ++i)
 		{
 			for (unsigned int j = 0; j < 3; ++j)
@@ -187,7 +193,7 @@ int main(int argc, char **argv)
 			}
 		}
 		outmodel.close();
-		std::ofstream outinliers((working_dir + "\\inliers.txt").c_str());
+		std::ofstream outinliers((working_dir + "inliers.txt").c_str());
 		for (unsigned int i = 0; i < cfg.common.numDataPoints; ++i)
 		{
 			outinliers << homog->usac_results_.inlier_flags_[i] << std::endl;
