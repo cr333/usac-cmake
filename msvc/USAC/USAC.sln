@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "USAC", "USAC.vcproj", "{42661DF6-BA9C-4C97-A38B-950C40360ADB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunSingleTest", "..\RunSingleTest\RunSingleTest.vcproj", "{20D489DB-EAB7-4CF4-97EC-FD56C313F8DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42661DF6-BA9C-4C97-A38B-950C40360ADB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{42661DF6-BA9C-4C97-A38B-950C40360ADB}.Debug|Win32.Build.0 = Debug|Win32
+		{42661DF6-BA9C-4C97-A38B-950C40360ADB}.Release|Win32.ActiveCfg = Release|Win32
+		{42661DF6-BA9C-4C97-A38B-950C40360ADB}.Release|Win32.Build.0 = Release|Win32
+		{20D489DB-EAB7-4CF4-97EC-FD56C313F8DA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{20D489DB-EAB7-4CF4-97EC-FD56C313F8DA}.Debug|Win32.Build.0 = Debug|Win32
+		{20D489DB-EAB7-4CF4-97EC-FD56C313F8DA}.Release|Win32.ActiveCfg = Release|Win32
+		{20D489DB-EAB7-4CF4-97EC-FD56C313F8DA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
