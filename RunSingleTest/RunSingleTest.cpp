@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "config/ConfigParams.h"
-#include "estimators/FundMatrixEstimator.h"
+#include "estimators/FundmatrixEstimator.h"
 #include "estimators/HomogEstimator.h"
 
 
